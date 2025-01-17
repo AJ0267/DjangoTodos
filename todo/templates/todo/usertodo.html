@@ -1,0 +1,63 @@
+{% extends 'todo/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<h1 class="text-2xl font-semibold text-center text-gray-900 mt-6 mb-4">
+  Welcome, <span class="text-blue-500">{{ request.user.username }}</span>!
+</h1>
+
+<form method="POST" class="flex justify-center items-center my-4 space-x-2">
+  {% csrf_token %}
+  <input
+    type="text"
+    name="task"
+    placeholder="Type here"
+    class="input input-bordered input-primary w-80"
+  />
+  <button type="submit" class="btn btn-primary">
+      Add
+  </button>
+</form>
+
+<div class="flex justify-center my-10">
+  <div class="bg-green-200 text-center p-4 rounded-lg inline-block">
+    <p class="text-sm text-gray-700">
+      Completed tasks will be highlighted in green.
+    </p>
+  </div>
+</div>
+
+<div class="overflow-x-auto m-10">
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Tasks</th>
+                <th>Delete</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for todo in todo_list %}
+            <tr class="bg-base-200 {% if todo.completed %} bg-green-200 {% endif %}" style="height: 60px;">
+                <th>{{ forloop.counter }}</th>
+                <td>{{ todo.task }}</td>
+                <td>
+                    <a href="{% url 'delete_todo' todo.id %}" class="inline-block">
+                        <img src="{% static 'todo/images/google-delete.svg' %}" alt="Delete Icon" class="w-6 h-6">
+                    </a>
+                </td>
+                <td>
+                  <a href="{% url 'toggle_status' todo.id %}" class="inline-block">
+                    <img src="{% static 'todo/images/google-check.svg' %}" alt="Check Icon" class="w-6 h-6">
+                  </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
